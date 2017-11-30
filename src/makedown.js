@@ -186,7 +186,7 @@
     /**
      * Hijacking DOM events
      */
-    submitButton.addEventListener('click', syncArticle, true)
+    submitButton.addEventListener('click', handleSubmitArticle, true)
 
     /**
      * Get editable content from DOM
@@ -333,6 +333,11 @@
       return
     }
 
+    if (e.altKey) {
+      window.open('mailto:?body=' + encodeURIComponent(convertToHTML(editor.value)))
+      return
+    }
+
     queryMeta();
 
     e.preventDefault()
@@ -455,6 +460,16 @@
     // to trigger autosave to make the update valid
     richText.focus()
     richText.blur()
+
+    return richText
+  }
+
+  function handleSubmitArticle (e) {
+    let richText = syncArticle()
+
+    if (e.altKey) {
+      window.open('mailto:?body=' + encodeURIComponent(convertToHTML(richText.innerHTML)))
+    }
   }
 
   function convertToMarkdown (html) {
